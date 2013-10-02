@@ -6,9 +6,9 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/aiyuelian/EGOTableViewPullRefresh"
 
-  s.license      = 'MIT'
+  s.license = { :type => 'MIT', :file => 'LICENSE.txt' }
 
-  s.author       = { "aiyuelian" => "529670074@qq.com" }
+  s.author       = { "aiyuelian" => "645822731@qq.com" }
 
   s.platform     = :ios, '6.0'
 

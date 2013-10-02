@@ -25,6 +25,7 @@
 }
 - (void)viewDidLoad
 {
+    NSLog(@"%@",[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]);
     [super viewDidLoad];
 	PullTableView *tableView = [[PullTableView alloc]initWithFrame:CGRectMake(0, 0, 320, 480)];
     tableView.delegate = self;
