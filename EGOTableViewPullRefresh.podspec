@@ -38,7 +38,7 @@ Pod::Spec.new do |s|
 
   s.platform     = :ios, '6.0'
 
-  s.source       = { :git => "https://github.com/aiyuelian/EGOTableViewPullRefresh.git", :commit => "d68bac2e04e3f003cf8f70642db2e2534a3eaf5a" }
+  s.source       = { :git => "https://github.com/aiyuelian/EGOTableViewPullRefresh.git", :commit => "d1d1d95dbfa25befb56f0814bb0ce4820dc8719f" }
 
   s.source_files  = 'EGOTableViewPullAction/Classes/*.{h,m}'
 
