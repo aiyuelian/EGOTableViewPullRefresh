@@ -114,32 +114,31 @@
             timeToDisplay = (NSInteger) (timeSinceLastUpdate / aMinute);
             
             if(timeToDisplay == /* Singular*/ 1) {
-            _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"Updated %ld minute ago",@"PullTableViewLan",@"Last uppdate in minutes singular"),(long)timeToDisplay];
+            _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"%ld 分钟前更新",@"PullTableViewLan",@"Last uppdate in minutes singular"),(long)timeToDisplay];
             } else {
                 /* Plural */
-                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"Updated %ld minutes ago",@"PullTableViewLan",@"Last uppdate in minutes plural"), (long)timeToDisplay];
+                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"%ld 分钟前更新",@"PullTableViewLan",@"Last uppdate in minutes plural"), (long)timeToDisplay];
 
             }
             
         } else if (timeSinceLastUpdate < aDay) {
             timeToDisplay = (NSInteger) (timeSinceLastUpdate / anHour);
             if(timeToDisplay == /* Singular*/ 1) {
-                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"Updated %ld hour ago",@"PullTableViewLan",@"Last uppdate in hours singular"), (long)timeToDisplay];
+                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"%ld 分小时前更新",@"PullTableViewLan",@"Last uppdate in hours singular"), (long)timeToDisplay];
             } else {
                 /* Plural */
-                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"Updated %ld hours ago",@"PullTableViewLan",@"Last uppdate in hours plural"), (long)timeToDisplay];
+                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"%ld 分小时前更新",@"PullTableViewLan",@"Last uppdate in hours plural"), (long)timeToDisplay];
                 
             }
             
         } else {
             timeToDisplay = (NSInteger) (timeSinceLastUpdate / aDay);
             if(timeToDisplay == /* Singular*/ 1) {
-                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"Updated %ld day ago",@"PullTableViewLan",@"Last uppdate in days singular"), (long)timeToDisplay];
+                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"%ld几天前更新",@"PullTableViewLan",@"Last uppdate in days singular"), (long)timeToDisplay];
             } else {
                 /* Plural */
-                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"Updated %ld days ago",@"PullTableViewLan",@"Last uppdate in days plural"), (long)timeToDisplay];
+                _lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTable(@"%ld几天前更新",@"PullTableViewLan",@"Last uppdate in days plural"), (long)timeToDisplay];
             }
-            
         }
         
     } else {
@@ -229,24 +228,34 @@
 
 - (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {	
     
+    float version = [[[UIDevice currentDevice]systemVersion] floatValue];
 	if (_state == EGOOPullLoading) {
 		CGFloat offset = MAX(scrollView.contentOffset.y * -1, 0);
-		offset = MIN(offset, PULL_AREA_HEIGTH);
+        if(version >= 7.0){
+		  offset = MIN(offset, 120);
+        }
+        else
+        {
+            offset = MIN(offset, PULL_AREA_HEIGTH);
+        }
         UIEdgeInsets currentInsets = scrollView.contentInset;
         currentInsets.top = offset;
         scrollView.contentInset = currentInsets;
 		
 	} else if (scrollView.isDragging) {
-		if (_state == EGOOPullPulling && scrollView.contentOffset.y > -PULL_TRIGGER_HEIGHT && scrollView.contentOffset.y < 0.0f && !isLoading) {
+        
+        
+        int hold = version>=7.0?125:-PULL_TRIGGER_HEIGHT;
+		if (_state == EGOOPullPulling && scrollView.contentOffset.y > -hold && scrollView.contentOffset.y < 0.0f && !isLoading) {
 			[self setState:EGOOPullNormal];
-		} else if (_state == EGOOPullNormal && scrollView.contentOffset.y < -PULL_TRIGGER_HEIGHT && !isLoading) {
+		} else if (_state == EGOOPullNormal && scrollView.contentOffset.y < -hold && !isLoading) {
 			[self setState:EGOOPullPulling];
             
 		}
 		
 		if (scrollView.contentInset.top != 0) {
             UIEdgeInsets currentInsets = scrollView.contentInset;
-            currentInsets.top = 0;
+            currentInsets.top = version>=7.0?PULL_AREA_HEIGTH:0;
             scrollView.contentInset = currentInsets;
 		}
 		
@@ -269,8 +278,8 @@
     }    
 }
 
+//松手的时候调用
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView {
-	
 	
 	if (scrollView.contentOffset.y <= - PULL_TRIGGER_HEIGHT && !isLoading) {
         //if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
@@ -288,7 +297,8 @@
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:.3];
     UIEdgeInsets currentInsets = scrollView.contentInset;
-    currentInsets.top = 0;
+    float version = [[[UIDevice currentDevice]systemVersion] floatValue];
+    currentInsets.top = version>=7.0?64:0;
     scrollView.contentInset = currentInsets;
 	[UIView commitAnimations];
 	

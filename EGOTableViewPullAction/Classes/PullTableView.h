@@ -66,6 +66,7 @@
     
 }
 
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style pullDownRefresh:(BOOL)refresh pullUpLoadMore:(BOOL)loadMore;
 /* The configurable display properties of PullTableView. Set to nil for default values */
 @property (nonatomic, strong) UIImage *pullArrowImage;
 @property (nonatomic, strong) UIColor *pullBackgroundColor;

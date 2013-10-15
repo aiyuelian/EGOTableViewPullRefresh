@@ -37,11 +37,11 @@
 # pragma mark - Initialization / Deallocation
 
 
-- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style pullDownRefresh:(BOOL)refresh pullUpLoadMore:(BOOL)loadMore
 {
     self = [super initWithFrame:frame style:style];
     if (self) {
-        [self config];
+        [self config :refresh :loadMore];
     }
     
     return self;
@@ -69,7 +69,7 @@
 
 # pragma mark - Custom view configuration
 
-- (void) config
+- (void) config :(BOOL)isRefresh :(BOOL)isLoadMore
 {
     /* Message interceptor to intercept scrollView delegate messages */
     delegateInterceptor = [[MessageInterceptor alloc] init];
@@ -82,16 +82,20 @@
     self.pullTableIsLoadingMore = NO;
     
     /* Refresh View */
+    if(isRefresh){
     refreshView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, -self.bounds.size.height, self.bounds.size.width, self.bounds.size.height)];
     refreshView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     refreshView.delegate = self;
     [self addSubview:refreshView];
+    }
     
     /* Load more view init */
+    if(isLoadMore){
     loadMoreView = [[LoadMoreTableFooterView alloc] initWithFrame:CGRectMake(0, self.bounds.size.height, self.bounds.size.width, self.bounds.size.height)];
     loadMoreView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     loadMoreView.delegate = self;
     [self addSubview:loadMoreView];
+    }
     
 }
 
@@ -180,7 +184,7 @@
 {
     if(aPullArrowImage != pullArrowImage) {
 //        [pullArrowImage release];
-//        pullArrowImage = [aPullArrowImage retain];
+        pullArrowImage = aPullArrowImage;
         [self configDisplayProperties];
     }
 }
@@ -189,7 +193,7 @@
 {
     if(aColor != pullBackgroundColor) {
        // [pullBackgroundColor release];
-       // pullBackgroundColor = [aColor retain];
+        //pullBackgroundColor = aColor;
         [self configDisplayProperties];
     } 
 }
@@ -198,7 +202,7 @@
 {
     if(aColor != pullTextColor) {
        // [pullTextColor release];
-       // pullTextColor = [aColor retain];
+        pullTextColor = aColor;
         [self configDisplayProperties];
     } 
 }
@@ -207,7 +211,7 @@
 {
     if(aDate != pullLastRefreshDate) {
        // [pullLastRefreshDate release];
-       // pullLastRefreshDate = [aDate retain];
+        pullLastRefreshDate = aDate;
         [refreshView refreshLastUpdatedDate];
     }
 }
